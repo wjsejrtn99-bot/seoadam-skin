@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#E8436B">
+  <meta name="description" content="23가지 문항으로 알아보는 나만의 피부 MBTI 진단">
+  <title>피부 MBTI 진단 | 서원장의 피부 홈코칭</title>
+
+  <!-- 구글 폰트: Noto Sans KR (본문) + Playfair Display (헤딩 장식) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       CSS 변수 및 전역 리셋
+       ============================================================ */
+    :root {
+      --p50:  #fff5f8;
+      --p100: #ffe4ef;
+      --p200: #ffcce0;
+      --p300: #ff9cc0;
+      --p400: #ff6b9d;
+      --p500: #e91e8c;
+      --p600: #c2157a;
+      --txt:  #1a1a2e;
+      --txt2: #555;
+      --txt3: #999;
+      --white: #ffffff;
+      --bg:   #fffafc;
+      --shadow: 0 2px 20px rgba(233,30,140,0.09);
+      --r: 20px;
+      --rs: 12px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       화면 전환 시스템 (Fade in/out)
+       ============================================================ */
+    .sw { /* screen-wrapper */
+      display: none;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .sw.active  { display: block; }
+    .sw.visible { opacity: 1; }
+
+    /* ============================================================
+       공통 버튼 스타일
+       ============================================================ */
+    .btn-main {
+      display: block;
+      width: 100%;
+      padding: 17px 24px;
+      background: linear-gradient(135deg, var(--p400), var(--p500));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .25s;
+      box-shadow: 0 6px 22px rgba(233,30,140,.32);
+      letter-spacing: .3px;
+    }
+    .btn-main:active { transform: scale(.97); }
+    .btn-main:disabled {
+      background: #ddd;
+      color: #bbb;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .btn-outline {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      background: transparent;
+      color: var(--p500);
+      border: 2px solid var(--p200);
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .25s;
+      margin-top: 12px;
+    }
+    .btn-outline:active { background: var(--p50); }
+
+    /* ============================================================
+       시작 화면
+       ============================================================ */
+    #sw-start {
+      background: linear-gradient(165deg, var(--p50) 0%, #fff 50%, var(--p100) 100%);
+      min-height: 100vh;
+    }
+    .start-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 52px 28px calc(44px + var(--safe-b));
+      text-align: center;
+    }
+    .brand-chip {
+      display: inline-block;
+      background: var(--p100);
+      color: var(--p600);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .start-deco {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p100), #ffd6e7);
+      margin: 0 auto 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      box-shadow: 0 8px 40px rgba(255,107,157,.22);
+    }
+    .start-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 34px;
+      font-style: italic;
+      color: var(--p500);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .start-subtitle {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 14px;
+    }
+    .start-desc {
+      font-size: 14px;
+      color: var(--txt3);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+    .start-stats {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--p400);
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--txt3);
+      margin-top: 2px;
+    }
+    .start-notice {
+      font-size: 11px;
+      color: var(--txt3);
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       질문 화면
+       ============================================================ */
+    #sw-questions {
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+      background: var(--bg);
+    }
+    #sw-questions.active { display: flex; }
+
+    /* 상단 고정 헤더 */
+    .q-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--white);
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid #ffe0ed;
+    }
+    .q-header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .section-chip {
+      background: var(--p100);
+      color: var(--p600);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+    .section-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--txt);
+    }
+    /* 진행률 바 */
+    .prog-wrap {
+      background: #ffe4ef;
+      height: 5px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .prog-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--p400), var(--p500));
+      border-radius: 3px;
+      transition: width .4s ease;
+    }
+    .prog-text {
+      font-size: 10px;
+      color: var(--txt3);
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    /* 질문 카드 목록 */
+    .q-body {
+      flex: 1;
+      padding: 16px 16px 8px;
+    }
+    .q-card {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 20px 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+    .q-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--p400);
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+    .q-text {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--txt);
+      margin-bottom: 18px;
+    }
+
+    /* 선택형 옵션 버튼 (라디오 스타일) */
+    .opt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .opt-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 13px 14px;
+      border: 2px solid var(--p200);
+      border-radius: var(--rs);
+      background: var(--white);
+      text-align: left;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--txt);
+      cursor: pointer;
+      transition: all .2s;
+      line-height: 1.4;
+    }
+    .opt-btn:active { background: var(--p50); }
+    .opt-btn.sel {
+      background: var(--p50);
+      border-color: var(--p400);
+      color: var(--p600);
+      font-weight: 600;
+    }
+    /* 라디오 원형 인디케이터 */
+    .opt-radio {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border: 2px solid var(--p300);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      background: var(--white);
+    }
+    .opt-radio.sel {
+      background: var(--p500);
+      border-color: var(--p500);
+    }
+    .opt-radio.sel::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: var(--white);
+      border-radius: 50%;
+    }
+    /* 2.5점 옵션 (중립 선택지) 구별 스타일 */
+    .opt-btn.opt-neutral {
+      border-style: dashed;
+      border-color: #e0e0e0;
+      color: var(--txt3);
+      font-size: 13px;
+    }
+    .opt-btn.opt-neutral.sel {
+      border-style: solid;
+      border-color: var(--p300);
+      color: var(--p500);
+      background: var(--p50);
+      font-weight: 500;
+    }
+
+    /* 하단 고정 버튼 영역 */
+    .q-footer {
+      position: sticky;
+      bottom: 0;
+      background: var(--white);
+      border-top: 1px solid #ffe0ed;
+      padding: 14px 20px calc(14px + var(--safe-b));
+      z-index: 20;
+    }
+
+    /* ============================================================
+       개인정보 입력 화면
+       ============================================================ */
+    #sw-info { min-height: 100vh; background: var(--bg); }
+    .info-header {
+      background: linear-gradient(160deg, var(--p50), var(--white));
+      padding: 32px 24px 24px;
+      text-align: center;
+      border-bottom: 1px solid #ffe0ed;
+    }
+    .info-header-emoji { font-size: 40px; margin-bottom: 12px; }
+    .info-header-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 8px;
+    }
+    .info-header-desc {
+      font-size: 13px;
+      color: var(--txt3);
+      line-height: 1.7;
+    }
+    .info-body { padding: 24px 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--txt);
+      margin-bottom: 7px;
+    }
+    .form-label span {
+      color: var(--p500);
+      margin-left: 2px;
+    }
+    .form-input {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--p200);
+      border-radius: var(--rs);
+      font-size: 16px; /* iOS 줌 방지: 16px 이상 필수 */
+      font-family: inherit;
+      color: var(--txt);
+      background: var(--white);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-input:focus { border-color: var(--p400); }
+    .form-input::placeholder { color: var(--txt3); font-size: 14px; }
+
+    /* 개인정보 동의 박스 */
+    .consent-box {
+      background: var(--p50);
+      border: 1.5px solid var(--p200);
+      border-radius: var(--rs);
+      padding: 16px;
+      margin: 20px 0;
+    }
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .consent-check {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      border: 2px solid var(--p300);
+      border-radius: 6px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      margin-top: 1px;
+    }
+    .consent-check.on {
+      background: var(--p500);
+      border-color: var(--p500);
+    }
+    .consent-check.on::after {
+      content: '✓';
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .consent-txt {
+      font-size: 13px;
+      color: var(--txt);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .consent-detail {
+      font-size: 11px;
+      color: var(--txt3);
+      line-height: 1.6;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--p200);
+    }
+    .info-footer { padding: 0 20px calc(32px + var(--safe-b)); }
+
+    /* ============================================================
+       로딩 화면
+       ============================================================ */
+    #sw-loading {
+      min-height: 100vh;
+      background: linear-gradient(160deg, var(--p50) 0%, #fff5f8 50%, var(--p100) 100%);
+    }
+    .loading-inner {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 28px;
+      text-align: center;
+    }
+    /* 스피너 애니메이션 */
+    .spinner-wrap {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      margin: 0 auto 44px;
+    }
+    .spin-ring {
+      position: absolute;
+      inset: 0;
+      border: 3px solid transparent;
+      border-top-color: var(--p400);
+      border-radius: 50%;
+      animation: spin 1.1s linear infinite;
+    }
+    .spin-ring:nth-child(2) {
+      inset: 14px;
+      border-top-color: var(--p200);
+      animation-duration: .75s;
+      animation-direction: reverse;
+    }
+    .spin-ring:nth-child(3) {
+      inset: 28px;
+      border-top-color: var(--p500);
+      animation-duration: 1.6s;
+    }
+    .spin-center {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 8px;
+    }
+    .loading-sub {
+      font-size: 14px;
+      color: var(--txt3);
+      margin-bottom: 28px;
+    }
+    /* 점 애니메이션 */
+    .dots {
+      display: flex; gap: 7px; justify-content: center;
+    }
+    .dot {
+      width: 9px; height: 9px;
+      background: var(--p400);
+      border-radius: 50%;
+      animation: dotBounce 1.3s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: .2s; }
+    .dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes dotBounce {
+      0%,80%,100% { transform: scale(.65); opacity: .4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ============================================================
+       결과 화면
+       ============================================================ */
+    #sw-result { min-height: 100vh; background: var(--bg); }
+    .result-hero {
+      background: linear-gradient(160deg, var(--p50) 0%, var(--p100) 100%);
+      padding: 44px 24px 32px;
+      text-align: center;
+    }
+    .result-badge {
+      display: inline-block;
+      background: var(--white);
+      color: var(--p600);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 10px rgba(233,30,140,.15);
+    }
+    .result-type-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-style: italic;
+      color: var(--p500);
+      margin-bottom: 6px;
+    }
+    .result-type-ko {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 16px;
+    }
+    .result-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .rtag {
+      background: var(--white);
+      color: var(--p600);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+    /* 이미지 플레이스홀더 (실제 이미지로 교체 가능) */
+    .result-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p100), #ffd6e7);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      box-shadow: 0 8px 32px rgba(255,107,157,.22);
+      /* 실제 이미지로 교체 시: background-image: url('your-image.jpg'); background-size: cover; */
+    }
+
+    /* 결과 본문 */
+    .result-body { padding: 20px 18px; }
+    .result-card {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 20px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+    .rc-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--p500);
+      letter-spacing: .5px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .rc-text {
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--txt);
+    }
+    .rc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rc-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--txt);
+      line-height: 1.5;
+    }
+    .rc-dot {
+      width: 7px; height: 7px;
+      min-width: 7px;
+      background: var(--p400);
+      border-radius: 50%;
+      margin-top: 5px;
+    }
+
+    /* CTA 섹션 */
+    .cta-section { padding: 4px 18px calc(44px + var(--safe-b)); }
+    .cta-card {
+      background: linear-gradient(135deg, var(--p50), var(--p100));
+      border: 1.5px solid var(--p200);
+      border-radius: var(--r);
+      padding: 20px 18px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .cta-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 8px;
+    }
+    .cta-card-desc {
+      font-size: 13px;
+      color: var(--txt2);
+      line-height: 1.7;
+    }
+    .cta-highlight { color: var(--p500); font-weight: 700; }
+    .cta-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--txt3);
+      margin-top: 12px;
+      line-height: 1.7;
+    }
+    .cta-note strong { color: var(--p500); }
+    .btn-kakao {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 17px 24px;
+      background: #FEE500;
+      color: #191919;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .25s;
+      box-shadow: 0 4px 16px rgba(254,229,0,.45);
+    }
+    .btn-kakao:active { transform: scale(.97); }
+
+    /* ============================================================
+       토스트 알림
+       ============================================================ */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(20,20,30,.82);
+      color: var(--white);
+      padding: 11px 22px;
+      border-radius: 24px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============================================================
+       반응형: 480px 초과 시 배경 처리
+       ============================================================ */
+    @media (min-width: 480px) {
+      body { background: #f5e6ef; }
+      .sw { box-shadow: 0 0 60px rgba(0,0,0,.12); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       화면 1: 시작 화면
+       ============================================================ -->
+  <div id="sw-start" class="sw active">
+    <div style="background: linear-gradient(165deg,#fff5f8 0%,#fff 50%,#ffe4ef 100%);min-height:100vh;">
+      <div class="start-inner">
+        <span class="brand-chip">SKIN MBTI TEST</span>
+        <!-- 브랜드 로고 / 일러스트 플레이스홀더 -->
+        <div class="start-deco">🌸</div>
+        <h1 class="start-title">Skin MBTI</h1>
+        <p class="start-subtitle">나의 피부 유형을 알아보세요</p>
+        <p class="start-desc">
+          23가지 문항으로 분석하는<br>
+          나만의 피부 MBTI 진단<br>
+          <span style="color:var(--p500);font-weight:600;">서원장</span>이 직접 설계한 피부 분석 시스템
+        </p>
+        <div class="start-stats">
+          <div class="stat-item">
+            <div class="stat-num">23</div>
+            <div class="stat-label">문항</div>
+          </div>
+          <div class="stat-item" style="border-left:1px solid #ffc0d6;border-right:1px solid #ffc0d6;padding:0 28px;">
+            <div class="stat-num">5<span style="font-size:14px">분</span></div>
+            <div class="stat-label">소요 시간</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">16</div>
+            <div class="stat-label">피부 타입</div>
+          </div>
+        </div>
+        <button class="btn-main" onclick="startQuiz()">무료 진단 시작하기 →</button>
+        <p class="start-notice">결과는 개인 맞춤 피부 홈코칭 추천에 활용됩니다</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       화면 2: 질문 화면 (섹션 A~D 공통)
+       ============================================================ -->
+  <div id="sw-questions" class="sw">
+    <!-- 상단 헤더 (고정) -->
+    <div class="q-header">
+      <div class="q-header-top">
+        <span class="section-chip" id="section-chip">SECTION A</span>
+        <span class="section-name" id="section-name">피부 유수분 밸런스</span>
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-bar" id="prog-bar" style="width:0%"></div>
+      </div>
+      <div class="prog-text" id="prog-text">0 / 23 완료</div>
+    </div>
+
+    <!-- 질문 카드 동적 렌더링 영역 -->
+    <div class="q-body" id="q-body"></div>
+
+    <!-- 하단 버튼 (고정) -->
+    <div class="q-footer">
+      <button class="btn-main" id="btn-next" disabled onclick="goNextSection()">다음으로</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       화면 3: 개인정보 입력 화면
+       ============================================================ -->
+  <div id="sw-info" class="sw">
+    <div style="max-width:480px;margin:0 auto;">
+      <div class="info-header">
+        <div class="info-header-emoji">✨</div>
+        <h2 class="info-header-title">거의 다 왔어요!</h2>
+        <p class="info-header-desc">
+          분석 결과와 맞춤 홈코칭 정보를<br>
+          알려드리기 위해 아래 정보를 입력해주세요
+        </p>
+      </div>
+      <div class="info-body">
+        <div class="form-group">
+          <label class="form-label" for="inp-name">이름 <span>*</span></label>
+          <input
+            class="form-input" id="inp-name" type="text"
+            placeholder="이름을 입력하세요" autocomplete="name"
+            oninput="validateInfoForm()"
+          >
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-phone">전화번호 <span>*</span></label>
+          <input
+            class="form-input" id="inp-phone" type="tel"
+            placeholder="'-' 없이 숫자만 입력" autocomplete="tel"
+            oninput="validateInfoForm()"
+          >
+        </div>
+
+        <!-- 개인정보 동의 -->
+        <div class="consent-box">
+          <div class="consent-row" onclick="toggleConsent()">
+            <div class="consent-check" id="consent-check"></div>
+            <div>
+              <p class="consent-txt">[필수] 개인정보 수집 및 이용 동의</p>
+              <div class="consent-detail">
+                수집 항목: 이름, 전화번호, 피부 진단 결과<br>
+                수집 목적: 피부 홈코칭 맞춤 상담 제공<br>
+                보유 기간: 상담 완료 후 1년<br>
+                동의를 거부하실 수 있으나, 서비스 이용이 제한될 수 있습니다.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="info-footer">
+        <button class="btn-main" id="btn-submit" disabled onclick="submitInfo()">결과 확인하기 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       화면 4: 로딩 화면 (1.5초 자동 전환)
+       ============================================================ -->
+  <div id="sw-loading" class="sw">
+    <div style="max-width:480px;margin:0 auto;">
+      <div class="loading-inner">
+        <!-- 회전 스피너 -->
+        <div class="spinner-wrap">
+          <div class="spin-ring"></div>
+          <div class="spin-ring"></div>
+          <div class="spin-ring"></div>
+          <div class="spin-center">🔬</div>
+        </div>
+        <h2 class="loading-title">서원장님이 피부 타입을<br>분석 중입니다...</h2>
+        <p class="loading-sub">23가지 응답을 바탕으로<br>최적의 피부 유형을 찾고 있어요</p>
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       화면 5: 결과 화면
+       ============================================================ -->
+  <div id="sw-result" class="sw">
+    <div style="max-width:480px;margin:0 auto;">
+      <!-- 히어로 영역 -->
+      <div class="result-hero">
+        <div class="result-badge">MY SKIN TYPE</div>
+        <div class="result-type-en" id="r-name-en">—</div>
+        <div class="result-type-ko" id="r-name-ko">—</div>
+        <div class="result-tags" id="r-tags"></div>
+        <!-- 이미지 플레이스홀더: 실제 서비스에서 피부 타입별 이미지로 교체 -->
+        <div class="result-img" id="r-img">🌸</div>
+      </div>
+
+      <!-- 결과 상세 -->
+      <div class="result-body">
+        <!-- 한 줄 요약 -->
+        <div class="result-card">
+          <div class="rc-title">📌 한 줄 요약</div>
+          <p class="rc-text" id="r-summary">—</p>
+        </div>
+        <!-- 상세 설명 -->
+        <div class="result-card">
+          <div class="rc-title">💆 피부 특성</div>
+          <p class="rc-text" id="r-desc">—</p>
+        </div>
+        <!-- 주요 고민 -->
+        <div class="result-card">
+          <div class="rc-title">⚠️ 주요 피부 고민</div>
+          <ul class="rc-list" id="r-concerns"></ul>
+        </div>
+        <!-- 케어 추천 -->
+        <div class="result-card">
+          <div class="rc-title">✅ 케어 추천</div>
+          <ul class="rc-list" id="r-recs"></ul>
+        </div>
+      </div>
+
+      <!-- CTA 섹션 -->
+      <div class="cta-section">
+        <div class="cta-card">
+          <p class="cta-card-title">🎁 나에게 맞는 1:1 피부 홈코칭</p>
+          <p class="cta-card-desc">
+            <span class="cta-highlight">서원장</span>이 직접 분석한<br>
+            나의 피부 타입에 꼭 맞는 홈케어 루틴을<br>
+            1:1 상담으로 알려드립니다
+          </p>
+        </div>
+
+        <!-- 카카오 채널 상담 버튼 -->
+        <button class="btn-kakao" id="btn-cta" onclick="openKakaoChannel()">
+          <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+            <path d="M18 3C9.716 3 3 8.372 3 15c0 4.26 2.66 8.003 6.68 10.26L8.24 31.5l6.584-4.38c1.03.18 2.09.28 3.176.28 8.284 0 15-5.372 15-12S26.284 3 18 3z" fill="#191919"/>
+          </svg>
+          나에게 맞는 피부 홈코칭 신청하기
+        </button>
+        <p class="cta-note">
+          <strong>추천 제품 구매 시 서원장의 1:1 홈코칭 무료 제공</strong><br>
+          카카오톡 채널로 연결됩니다
+        </p>
+
+        <!-- 공유 버튼 -->
+        <button class="btn-outline" onclick="shareResult()">🔗 결과 공유하기</button>
+
+        <!-- 재시작 버튼 -->
+        <button class="btn-outline" style="color:var(--txt3);border-color:#eee;margin-top:8px;" onclick="restartQuiz()">처음부터 다시하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ============================================================
+       ⚙️  설정값 — 실제 서비스 전 이 부분을 채워주세요
+       ============================================================ */
+    const CONFIG = {
+      // Google Apps Script 웹훅 URL
+      // → Google Sheets에 이름/전화번호/피부타입을 자동 저장
+      // → Apps Script 배포 후 웹앱 URL을 여기에 붙여넣기
+      GOOGLE_SCRIPT_URL: '',
+
+      // 카카오 JavaScript 앱 키
+      // → 카카오 개발자센터(developers.kakao.com) > 내 애플리케이션 > 앱 키 > JavaScript 키
+      KAKAO_JS_KEY: '',
+
+      // 카카오 채널 Public ID
+      // → 카카오 채널 관리자센터에서 확인 (예: '_abcde')
+      KAKAO_CHANNEL_ID: '',
+    };
+
+    /* ============================================================
+       📋  질문 데이터 — 실제 질문으로 교체하세요
+       각 섹션(A~D)별 문항 배열
+       ============================================================ */
+    const QUESTIONS = [
+      /* ─── 지표 1: 건성(D) vs 지성(O) ─── 4문항, 합산 ≤10=D / >10=O */
+      {
+        section: 'A',
+        title: '건성 vs 지성',
+        description: '피부의 유분·수분 상태를 확인합니다',
+        items: [
+          {
+            text: '내 얼굴 피부는 어떤 상태인가요?',
+            options: [
+              { value: 1, label: '건성' },
+              { value: 2, label: '정상' },
+              { value: 3, label: '복합성' },
+              { value: 4, label: '지성' },
+            ],
+          },
+          {
+            text: '세안 후 얼굴에 아무것도 바르지 않으면 당신의 피부는 어떤가요?',
+            options: [
+              { value: 1,   label: '매우 건조하고 갈라지는 느낌' },
+              { value: 2,   label: '당기는 느낌' },
+              { value: 2.5, label: '모르겠다', neutral: true },
+              { value: 3,   label: '정상적인 느낌' },
+              { value: 4,   label: '윤기가 돈다' },
+            ],
+          },
+          {
+            text: '기초 화장만 한 상태에서 2~3시간 후 화장 상태는?',
+            options: [
+              { value: 1,   label: '각질이 일어나거나 주름 사이에 낌' },
+              { value: 2,   label: '매끈하다' },
+              { value: 2.5, label: '기초화장을 하지 않는다', neutral: true },
+              { value: 3,   label: '윤기가 흐른다' },
+              { value: 4,   label: '줄이 생기고 윤기가 흐른다' },
+            ],
+          },
+          {
+            text: '얼굴에 모공이 보이나요?',
+            options: [
+              { value: 1, label: '전혀 없다' },
+              { value: 2, label: '거의 없다' },
+              { value: 3, label: '어느정도 있다' },
+              { value: 4, label: '항상 모공이 크게 보인다' },
+            ],
+          },
+        ],
+      },
+
+      /* ─── 지표 2: 저항(R) vs 민감(S) ─── 6문항, 합산 ≤10=R / >10=S */
+      {
+        section: 'B',
+        title: '저항성 vs 민감성',
+        description: '외부 자극에 대한 피부 반응을 확인합니다',
+        items: [
+          {
+            text: '과거에 여드름, 주사피부염, 아토피 등을 진단받은 적 있나요?',
+            options: [
+              { value: 1,   label: '없다' },
+              { value: 2,   label: '제3자가 증상 있다고 함' },
+              { value: 2.5, label: '잘 모르겠다', neutral: true },
+              { value: 3,   label: '진단받았다' },
+              { value: 4,   label: '심각한 정도' },
+            ],
+          },
+          {
+            text: '18K 금이 아닌 장신구 착용 시 피부 발진이 나타나나요?',
+            options: [
+              { value: 1,   label: '전혀 안 나타난다' },
+              { value: 2,   label: '거의 안 나타난다' },
+              { value: 2.5, label: '잘 모르겠다', neutral: true },
+              { value: 3,   label: '자주 나타난다' },
+              { value: 4,   label: '항상 나타난다' },
+            ],
+          },
+          {
+            text: '피부 관리용 제품 사용 시 뾰루지, 발진, 가려움증을 경험한 적 있나요?',
+            options: [
+              { value: 1,   label: '전혀 없다' },
+              { value: 2,   label: '거의 없다' },
+              { value: 2.5, label: '얼굴에 피부관리 제품을 바르지 않는다', neutral: true },
+              { value: 3,   label: '자주 있다' },
+              { value: 4,   label: '항상 있다' },
+            ],
+          },
+          {
+            text: '어떤 화장품이든 아무런 문제 없이 사용할 수 있나요?',
+            options: [
+              { value: 1,   label: '문제없이 사용 가능' },
+              { value: 2,   label: '대부분 가능' },
+              { value: 2.5, label: '개인용 화장품만 써서 모르겠다', neutral: true },
+              { value: 3,   label: '가끔 가렵고 붉어지거나 트러블' },
+              { value: 4,   label: '너무 많은 문제로 사용 불가' },
+            ],
+          },
+          {
+            text: '향료가 포함된 제품 사용 시 발진, 가려움, 건조함을 경험한 적 있나요?',
+            options: [
+              { value: 1,   label: '전혀 없다' },
+              { value: 2,   label: '거의 없다' },
+              { value: 2.5, label: '이런 제품을 사용하지 않는다', neutral: true },
+              { value: 3,   label: '자주 있다' },
+              { value: 4,   label: '항상 있다' },
+            ],
+          },
+          {
+            text: '사진을 찍으면 얼굴이 붉게 보이나요?',
+            options: [
+              { value: 1, label: '전혀 아니다' },
+              { value: 2, label: '때때로 그렇다' },
+              { value: 3, label: '자주 그렇다' },
+              { value: 4, label: '항상 그렇다' },
+            ],
+          },
+        ],
+      },
+
+      /* ─── 지표 3: 색소(P) vs 비색소(N) ─── 4문항, 합산 ≤10=P / >10=N */
+      {
+        section: 'C',
+        title: '색소형 vs 비색소형',
+        description: '색소 침착과 피부 톤 변화를 확인합니다',
+        items: [
+          {
+            text: '과거 얼굴의 기미, 주근깨, 잡티로 진단받은 적 있나요?',
+            options: [
+              { value: 1,   label: '없다' },
+              { value: 2,   label: '있었지만 지금은 없다' },
+              { value: 2.5, label: '잘 모르겠다', neutral: true },
+              { value: 3,   label: '어느정도 있다' },
+              { value: 4,   label: '심각할 정도로 있다' },
+            ],
+          },
+          {
+            text: '피부가 햇빛에 노출되면 어떻게 변하나요?',
+            options: [
+              { value: 1, label: '붉어지다 원래 색으로 돌아온다' },
+              { value: 2, label: '살짝 타고 금방 돌아온다' },
+              { value: 3, label: '타고 1~2주 지속된다' },
+              { value: 4, label: '타고 몇 개월 지속된다' },
+            ],
+          },
+          {
+            text: '손등, 겨드랑이, 사타구니 등 접히는 부위와 피부색 차이가 있나요?',
+            options: [
+              { value: 1, label: '거의 동일하다' },
+              { value: 2, label: '부분적으로 다른 부위가 있다' },
+              { value: 3, label: '확연한 차이가 있다' },
+              { value: 4, label: '매우 짙어 콤플렉스다' },
+            ],
+          },
+          {
+            text: '여드름이나 상처 난 피부에 색소침착이 잘 생기나요?',
+            options: [
+              { value: 1, label: '전혀 생기지 않는다' },
+              { value: 2, label: '때때로 생긴다' },
+              { value: 3, label: '자주 생긴다' },
+              { value: 4, label: '항상 생긴다' },
+            ],
+          },
+        ],
+      },
+
+      /* ─── 지표 4: 탄력(T) vs 주름(W) ─── 9문항, 합산 ≤22=T / >22=W */
+      {
+        section: 'D',
+        title: '탄력형 vs 주름형',
+        description: '피부 탄력과 노화 정도를 확인합니다',
+        items: [
+          {
+            text: '얼굴에 주름이 있나요?',
+            options: [
+              { value: 1, label: '웃거나 찡그려도 없다' },
+              { value: 2, label: '표정 지을 때 있다' },
+              { value: 3, label: '표정 없어도 약간 있다' },
+              { value: 4, label: '항상 있다' },
+            ],
+          },
+          {
+            text: '1년 동안 최소 2주 이상 피부를 태운 적 있나요?',
+            options: [
+              { value: 1, label: '없다' },
+              { value: 2, label: '1년~5년' },
+              { value: 3, label: '5년~10년' },
+              { value: 4, label: '10년 초과' },
+            ],
+          },
+          {
+            text: '나는 얼마나 나이 들어 보인다고 생각하나요?',
+            options: [
+              { value: 1, label: '1~5년 젊어 보인다' },
+              { value: 2, label: '나이대로 보인다' },
+              { value: 3, label: '5년 더 늙어 보인다' },
+              { value: 4, label: '5년 이상 더 늙어 보인다' },
+            ],
+          },
+          {
+            text: '어머니의 얼굴 피부는 어떠신가요?',
+            options: [
+              { value: 1,   label: '5~10년 젊어 보인다' },
+              { value: 2,   label: '나이대로 보인다' },
+              { value: 2.5, label: '모르겠다', neutral: true },
+              { value: 3,   label: '5년 이상 늙어 보인다' },
+            ],
+          },
+          {
+            text: '아버지의 얼굴 피부는 어떠신가요?',
+            options: [
+              { value: 1,   label: '5~10년 젊어 보인다' },
+              { value: 2,   label: '나이대로 보인다' },
+              { value: 2.5, label: '모르겠다', neutral: true },
+              { value: 3,   label: '5년 이상 늙어 보인다' },
+            ],
+          },
+          {
+            text: '담배를 얼마나 피우나요?',
+            options: [
+              { value: 1,   label: '안 핀다' },
+              { value: 2,   label: '일주일에 두세 갑' },
+              { value: 2.5, label: '안 피지만 간접흡연 있다', neutral: true },
+              { value: 3,   label: '일주일에 두세 갑 이상' },
+              { value: 4,   label: '매일 피운다' },
+            ],
+          },
+          {
+            text: '주름개선 화장품이나 보톡스, 필러 등 시술을 얼마나 받으셨나요?',
+            options: [
+              { value: 1, label: '정기적으로 꾸준히 받는다' },
+              { value: 2, label: '주 2~3회 바르고 연 3번 시술' },
+              { value: 3, label: '주 1회, 가끔 시술' },
+              { value: 4, label: '한 적 없다' },
+            ],
+          },
+          {
+            /* Q22: 1~5점 척도 (2.5 없음) */
+            text: '자외선 차단제를 하루에 얼마나 사용하나요?',
+            options: [
+              { value: 1, label: '매일 사용' },
+              { value: 2, label: '주 3~5회' },
+              { value: 3, label: '주 1~2회' },
+              { value: 4, label: '어쩌다 한 번' },
+              { value: 5, label: '전혀 사용 안 함' },
+            ],
+          },
+          {
+            text: '일상에서 햇빛 노출 시간은 하루에 얼마나 되나요?',
+            options: [
+              { value: 1, label: '별로 없다' },
+              { value: 2, label: '약간 있다' },
+              { value: 3, label: '보통이다' },
+              { value: 4, label: '많다' },
+            ],
+          },
+        ],
+      },
+    ];
+
+    /* ============================================================
+       🌸  결과 데이터 — 클라이언트 텍스트 수령 전까지 더미 데이터 유지
+       키 형식: 지표1(D|O) + 지표2(R|S) + 지표3(P|N) + 지표4(T|W) = 16가지
+       D=건성, O=지성, R=저항, S=민감, P=색소, N=비색소, T=탄력, W=주름
+       ============================================================ */
+    const RESULTS = {
+      /* ── 건성(D) 계열 8가지 ── */
+
+      // 건성 · 저항성 · 색소형 · 탄력형
+      'DRPT': {
+        name: 'Ivory Pearl',
+        koreanName: '건성 저항 색소 탄력 타입',
+        emoji: '🤍',
+        tags: ['건성', '저항성', '색소형', '탄력형'],
+        summary: '피부 탄력과 면역력은 좋지만, 건조한 피부에 색소 침착이 고민인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 탄력과 저항력이 우수하지만, 건조함과 색소 침착이 복합적으로 나타나는 타입입니다. 충분한 보습을 기반으로 미백 케어를 병행하면 효과적입니다.',
+        concerns: ['피부 건조·당김·각질', '기미·잡티·색소 침착', '수분 부족'],
+        recommendations: ['고보습 크림으로 수분 장벽 강화', '나이아신아마이드 미백 세럼', 'SPF50+ 자외선 차단 매일', '정기적 각질 케어'],
+      },
+      // 건성 · 저항성 · 색소형 · 주름형
+      'DRPW': {
+        name: 'Ivory Amber',
+        koreanName: '건성 저항 색소 주름 타입',
+        emoji: '🌾',
+        tags: ['건성', '저항성', '색소형', '주름형'],
+        summary: '저항력은 강하지만 건조한 피부에 색소 침착과 주름이 함께 고민인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 외부 자극에는 강하지만, 건성 피부에 색소 침착과 주름 노화가 동시에 나타나는 타입입니다. 보습-미백-안티에이징 3단계 케어가 필요합니다.',
+        concerns: ['피부 건조·각질', '기미·잡티·색소 침착', '주름·탄력 저하'],
+        recommendations: ['리치한 고보습 크림', '비타민C·나이아신아마이드 미백', '레티놀 야간 안티에이징', '자외선 차단 매일 필수'],
+      },
+      // 건성 · 저항성 · 비색소형 · 탄력형
+      'DRNT': {
+        name: 'Pure Ivory',
+        koreanName: '건성 저항 비색소 탄력 타입',
+        emoji: '🌿',
+        tags: ['건성', '저항성', '비색소형', '탄력형'],
+        summary: '건성 피부 중 가장 균형 잡힌 타입, 기본 보습 관리만으로도 아름다운 피부입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 면역력이 좋고, 색소 침착이나 주름 걱정도 적은 이상적인 건성 타입입니다. 꾸준한 보습 케어만으로 피부를 오래 건강하게 유지할 수 있습니다.',
+        concerns: ['피부 건조·수분 부족', '각질 발생 가능'],
+        recommendations: ['히알루론산 세럼으로 수분 충전', '세라마이드 보습 크림', '자외선 차단 꾸준히', '주 1회 보습 마스크팩'],
+      },
+      // 건성 · 저항성 · 비색소형 · 주름형
+      'DRNW': {
+        name: 'Silver Cream',
+        koreanName: '건성 저항 비색소 주름 타입',
+        emoji: '🕊️',
+        tags: ['건성', '저항성', '비색소형', '주름형'],
+        summary: '저항력 강하고 색소는 깨끗하지만, 건조한 피부에 주름 관리가 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 면역력이 좋고 색소 침착은 없지만, 건조함과 주름·노화 신호가 나타나는 타입입니다. 풍부한 보습과 함께 안티에이징 성분을 적극 활용하세요.',
+        concerns: ['피부 건조·당김', '주름·탄력 저하', '피부 처짐'],
+        recommendations: ['고보습 안티에이징 크림', '레티놀·펩타이드 세럼', '페이셜 마사지로 순환 촉진', '자외선 차단으로 광노화 예방'],
+      },
+      // 건성 · 민감성 · 색소형 · 탄력형
+      'DSPT': {
+        name: 'Velvet Rose',
+        koreanName: '건성 민감 색소 탄력 타입',
+        emoji: '🥀',
+        tags: ['건성', '민감성', '색소형', '탄력형'],
+        summary: '탄력은 좋지만 건조하고 예민한 피부에 색소 침착이 함께 고민인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 탄력은 양호하지만, 건성이면서 예민하고 색소 침착이 나타나는 타입입니다. 피부 장벽을 먼저 안정시킨 후 순한 미백 성분을 단계적으로 도입하세요.',
+        concerns: ['피부 건조·각질·당김', '예민·자극 반응', '기미·잡티 색소 침착'],
+        recommendations: ['세라마이드 장벽 강화 보습', '저자극 나이아신아마이드 미백', '패치 테스트 후 신제품 도입', '물리적 자외선 차단제'],
+      },
+      // 건성 · 민감성 · 색소형 · 주름형
+      'DSPW': {
+        name: 'Autumn Velvet',
+        koreanName: '건성 민감 색소 주름 타입',
+        emoji: '🍂',
+        tags: ['건성', '민감성', '색소형', '주름형'],
+        summary: '건성·민감·색소·주름까지 복합적인 케어가 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 건조하고 예민한 피부에 색소 침착과 주름까지 함께 관리해야 하는 복합 타입입니다. 피부 안정화 → 보습 → 미백 → 안티에이징 순서로 단계적 케어가 필요합니다.',
+        concerns: ['심한 건조·당김·각질', '예민·발진·붉어짐', '기미·잡티 색소', '주름·탄력 저하'],
+        recommendations: ['히알루론산 집중 보습 레이어링', '세라마이드 장벽 크림', '저자극 미백+안티에이징 세럼', '물리적 선크림 매일 필수'],
+      },
+      // 건성 · 민감성 · 비색소형 · 탄력형
+      'DSNT': {
+        name: 'Crystal Dew',
+        koreanName: '건성 민감 비색소 탄력 타입',
+        emoji: '💧',
+        tags: ['건성', '민감성', '비색소형', '탄력형'],
+        summary: '탄력·색소는 양호하고, 건조하면서 예민한 피부 안정화가 핵심인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 색소 침착이나 주름 걱정은 적지만, 건성이면서 예민하여 자극 성분에 쉽게 반응하는 타입입니다. 미니멀 루틴과 수분 공급에 집중하면 피부를 안정적으로 유지할 수 있습니다.',
+        concerns: ['건조·각질·당김', '외부 자극에 민감한 반응', '화장품 선택 어려움'],
+        recommendations: ['히알루론산·판테놀 수분 세럼', '무향·무알코올 보습 크림', '미니멀 루틴 5단계 이하', '저자극 물리적 선크림'],
+      },
+      // 건성 · 민감성 · 비색소형 · 주름형
+      'DSNW': {
+        name: 'Moonlight',
+        koreanName: '건성 민감 비색소 주름 타입',
+        emoji: '🌕',
+        tags: ['건성', '민감성', '비색소형', '주름형'],
+        summary: '예민한 건성 피부에 순한 안티에이징 케어가 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 색소 침착은 없지만, 건조하고 예민한 피부에 주름과 탄력 저하가 나타나는 타입입니다. 피부 장벽 강화를 최우선으로, 자극이 적은 순한 안티에이징 성분을 선택하세요.',
+        concerns: ['건조·탈수 현상', '예민함으로 인한 붉은기', '주름·탄력 저하'],
+        recommendations: ['히알루론산 레이어링', '세라마이드 크림으로 장벽 밀봉', '순한 펩타이드 세럼', '물리적 자외선 차단제'],
+      },
+
+      /* ── 지성(O) 계열 8가지 ── */
+
+      // 지성 · 저항성 · 색소형 · 탄력형
+      'ORPT': {
+        name: 'Sunshine Gold',
+        koreanName: '지성 저항 색소 탄력 타입',
+        emoji: '🌟',
+        tags: ['지성', '저항성', '색소형', '탄력형'],
+        summary: '탄력 좋고 저항력 강한 지성 피부, 미백 집중 케어가 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 탄력과 면역력이 우수한 지성 피부지만, 색소 침착이 고민인 타입입니다. 피지 조절과 집중 미백 케어를 병행하면 빠른 개선 효과를 기대할 수 있습니다.',
+        concerns: ['T존·이마 번들거림', '기미·잡티·착색', '모공 확장'],
+        recommendations: ['살리실산 각질 케어', '나이아신아마이드 미백 세럼', '매트 선크림으로 자외선 차단', 'AHA 필링 패드로 피부톤 균일화'],
+      },
+      // 지성 · 저항성 · 색소형 · 주름형
+      'ORPW': {
+        name: 'Gold Sunset',
+        koreanName: '지성 저항 색소 주름 타입',
+        emoji: '✨',
+        tags: ['지성', '저항성', '색소형', '주름형'],
+        summary: '저항력은 강하지만 지성 피부에 색소·주름이 함께 고민인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 외부 자극에 강한 피부지만, 지성이면서 색소 침착과 주름 노화가 함께 나타나는 타입입니다. 피지 조절 → 미백 → 안티에이징 순서로 체계적인 케어가 효과적입니다.',
+        concerns: ['과잉 피지 번들거림', '기미·잡티 발생', '탄력 저하·주름'],
+        recommendations: ['BHA로 모공·피지 조절', '비타민C+나이아신아마이드 미백', '레티놀 야간 안티에이징', '매트 텍스처 선크림'],
+      },
+      // 지성 · 저항성 · 비색소형 · 탄력형
+      'ORNT': {
+        name: 'Clear Bloom',
+        koreanName: '지성 저항 비색소 탄력 타입',
+        emoji: '💫',
+        tags: ['지성', '저항성', '비색소형', '탄력형'],
+        summary: '지성 피부 중 가장 건강하고 관리가 쉬운 이상적인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 지성이지만 예민하지 않고, 색소 침착이나 주름 걱정도 적은 건강한 지성 피부 타입입니다. 기본 피지 조절과 수분 밸런스 유지만으로도 오래 건강하게 관리할 수 있습니다.',
+        concerns: ['T존 피지 과잉', '모공 확장 예방', '화장 지속력'],
+        recommendations: ['오일 프리 클렌저', '수분 밸런스 로션', '주 1~2회 모공 딥클렌징', '피지 조절 선크림'],
+      },
+      // 지성 · 저항성 · 비색소형 · 주름형
+      'ORNW': {
+        name: 'Midnight Oil',
+        koreanName: '지성 저항 비색소 주름 타입',
+        emoji: '🌙',
+        tags: ['지성', '저항성', '비색소형', '주름형'],
+        summary: '저항력 강하고 색소는 깨끗한 지성 피부, 안티에이징에 집중이 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 면역력이 좋고 색소 문제도 없지만, 지성이면서 주름과 탄력 저하가 나타나는 타입입니다. 오일 프리 안티에이징 성분으로 유분을 조절하면서 탄력을 케어하세요.',
+        concerns: ['지성 번들거림', '주름·탄력 저하', '모공 확장'],
+        recommendations: ['젤 타입 레티놀·펩타이드 세럼', '나이아신아마이드로 모공·탄력 케어', '가벼운 로션 타입 크림', '자외선 차단 매일'],
+      },
+      // 지성 · 민감성 · 색소형 · 탄력형
+      'OSPT': {
+        name: 'Petal Blush',
+        koreanName: '지성 민감 색소 탄력 타입',
+        emoji: '🌷',
+        tags: ['지성', '민감성', '색소형', '탄력형'],
+        summary: '탄력은 좋지만 예민한 지성 피부에 색소 침착이 주된 고민인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 피부 탄력은 양호하지만, 지성이면서 예민하고 색소 침착이 고민인 타입입니다. 피부를 먼저 안정시킨 후 순한 미백 성분을 단계적으로 도입하는 것이 핵심입니다.',
+        concerns: ['T존 유분 과잉', '예민·트러블 발생', '기미·잡티 색소'],
+        recommendations: ['무향·무알코올 저자극 제품', '나이아신아마이드 미백 세럼', '패치 테스트 후 신제품 도입', 'PA++++ 자외선 차단'],
+      },
+      // 지성 · 민감성 · 색소형 · 주름형
+      'OSPW': {
+        name: 'Rose Velvet',
+        koreanName: '지성 민감 색소 주름 타입',
+        emoji: '🌹',
+        tags: ['지성', '민감성', '색소형', '주름형'],
+        summary: '지성·민감·색소·주름까지 가장 복합적인 케어가 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 유분이 많으면서도 예민하고, 색소 침착과 주름 노화까지 복합적으로 나타나는 타입입니다. 피부 안정화를 최우선으로, 단계적 기능성 케어를 추가해 나가세요.',
+        concerns: ['피지 과잉·번들거림', '예민·자극 반응', '기미·잡티 색소', '주름·탄력 저하'],
+        recommendations: ['저자극 약산성 클렌저', '비오일 수분 크림', '저농도 나이아신아마이드 세럼', '레티놀 야간 케어 단계적 도입'],
+      },
+      // 지성 · 민감성 · 비색소형 · 탄력형
+      'OSNT': {
+        name: 'Petal Glow',
+        koreanName: '지성 민감 비색소 탄력 타입',
+        emoji: '🌸',
+        tags: ['지성', '민감성', '비색소형', '탄력형'],
+        summary: '탄력·색소는 양호하고, 예민한 지성 피부 안정화가 핵심인 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 색소 침착이나 주름 걱정은 적지만, 지성이면서 예민한 피부라 자극 성분에 쉽게 반응하는 타입입니다. 미니멀 루틴으로 피부를 안정시키면 오래 좋은 상태를 유지할 수 있습니다.',
+        concerns: ['T존 번들거림', '예민·트러블 반응', '화장품 선택 주의 필요'],
+        recommendations: ['미니멀 스킨케어 5단계 이하', '비오일 수분 로션', '새 제품 패치 테스트 필수', '성분 단순한 제품 선택'],
+      },
+      // 지성 · 민감성 · 비색소형 · 주름형
+      'OSNW': {
+        name: 'Ruby Mist',
+        koreanName: '지성 민감 비색소 주름 타입',
+        emoji: '💎',
+        tags: ['지성', '민감성', '비색소형', '주름형'],
+        summary: '예민한 지성 피부에 주름 관리가 함께 필요한 타입입니다.',
+        description: '(클라이언트 텍스트 수령 후 교체 예정) 색소 침착은 없지만, 지성이면서 예민하고 주름·탄력 저하가 나타나는 타입입니다. 피부 장벽을 강화한 후 가벼운 텍스처의 안티에이징 성분을 단계적으로 추가하세요.',
+        concerns: ['T존 번들거림', '예민·장벽 약화', '주름·탄력 저하'],
+        recommendations: ['세라마이드·판테놀 장벽 강화', '오일 프리 안티에이징 앰플', '젤 크림 타입 보습제', '스프레이 선크림으로 재도포'],
+      },
+    };
+
+    /* ============================================================
+       앱 상태 (App State)
+       ============================================================ */
+    const state = {
+      sectionIdx: 0,          // 현재 섹션 인덱스 (0=A, 1=B, 2=C, 3=D)
+      answers: {},            // 답변 저장: { 'A-0': 3, 'A-1': 2, ... }
+      userName: '',           // 사용자 이름
+      userPhone: '',          // 사용자 전화번호
+      skinType: '',           // 계산된 피부 타입 코드 (예: 'DRPT', 'OSNW')
+      consentGiven: false,    // 개인정보 동의 여부
+    };
+
+    /* ============================================================
+       화면 전환 함수
+       ============================================================ */
+    // 현재 활성화된 화면 ID 추적
+    let currentScreenId = 'sw-start';
+
+    /**
+     * 지정한 화면으로 전환 (fade out → fade in)
+     * @param {string} nextId - 전환할 화면의 element ID
+     */
+    function goScreen(nextId) {
+      const current = document.getElementById(currentScreenId);
+      const next = document.getElementById(nextId);
+
+      // 현재 화면 fade out
+      if (current) {
+        current.classList.remove('visible');
+        setTimeout(() => {
+          current.classList.remove('active');
+          // 다음 화면 표시 및 fade in
+          next.classList.add('active');
+          // 스크롤 최상단으로 이동
+          window.scrollTo(0, 0);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              next.classList.add('visible');
+            });
+          });
+        }, 350);
+      } else {
+        next.classList.add('active');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => next.classList.add('visible'));
+        });
+      }
+
+      currentScreenId = nextId;
+    }
+
+    /* ============================================================
+       시작 화면 → 질문 A
+       ============================================================ */
+    function startQuiz() {
+      state.sectionIdx = 0;
+      renderQuestions();
+      goScreen('sw-questions');
+    }
+
+    /* ============================================================
+       질문 렌더링
+       ============================================================ */
+    /**
+     * 현재 섹션의 질문을 화면에 렌더링
+     */
+    function renderQuestions() {
+      const sec = QUESTIONS[state.sectionIdx];
+      const totalAnswered = Object.keys(state.answers).length;
+      const totalQuestions = QUESTIONS.reduce((s, q) => s + q.items.length, 0);
+
+      // 헤더 업데이트
+      document.getElementById('section-chip').textContent = `SECTION ${sec.section}`;
+      document.getElementById('section-name').textContent = sec.title;
+      document.getElementById('prog-bar').style.width = `${(totalAnswered / totalQuestions) * 100}%`;
+      document.getElementById('prog-text').textContent = `${totalAnswered} / ${totalQuestions} 완료`;
+
+      // 질문 카드 생성
+      const body = document.getElementById('q-body');
+      body.innerHTML = '';
+
+      // 이전 섹션까지의 누적 문항 번호 계산
+      let prevCount = 0;
+      for (let i = 0; i < state.sectionIdx; i++) {
+        prevCount += QUESTIONS[i].items.length;
+      }
+
+      // items 배열은 이제 { text, options } 객체 배열 (구조화된 선택지)
+      sec.items.forEach((item, idx) => {
+        const key = `${sec.section}-${idx}`;
+        const currentVal = state.answers[key] ?? null; // 선택된 값 (2.5 등 포함)
+
+        const card = document.createElement('div');
+        card.className = 'q-card';
+
+        // 각 선택지 버튼 HTML 생성
+        // neutral: true인 항목(2.5점)은 점선 테두리로 구분
+        const optionsHtml = item.options.map(opt => {
+          const isSel = currentVal === opt.value;
+          const isNeutral = opt.neutral === true;
+          return `
+            <button
+              class="opt-btn${isSel ? ' sel' : ''}${isNeutral ? ' opt-neutral' : ''}"
+              data-value="${opt.value}"
+              onclick="selectAnswer('${sec.section}', ${idx}, ${opt.value})"
+            >
+              <div class="opt-radio${isSel ? ' sel' : ''}"></div>
+              <span>${opt.label}</span>
+            </button>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="q-num">Q${prevCount + idx + 1} · ${sec.title}</div>
+          <p class="q-text">${item.text}</p>
+          <div class="opt-list" id="opts-${sec.section}-${idx}">
+            ${optionsHtml}
+          </div>
+        `;
+        body.appendChild(card);
+      });
+
+      // 다음 버튼 상태 업데이트
+      updateNextBtn();
+    }
+
+    /* ============================================================
+       척도 선택 처리
+       ============================================================ */
+    /**
+     * 사용자가 척도를 선택할 때 호출
+     * @param {string} section - 섹션 코드 (A/B/C/D)
+     * @param {number} qIdx - 해당 섹션 내 질문 인덱스
+     * @param {number} value - 선택한 점수 (1~5)
+     */
+    function selectAnswer(section, qIdx, value) {
+      const key = `${section}-${qIdx}`;
+      state.answers[key] = value;
+
+      // 해당 질문의 모든 옵션 버튼 UI 업데이트
+      // data-value 속성으로 선택된 버튼을 특정 (2.5 등 부동소수 포함)
+      const buttons = document.querySelectorAll(`#opts-${section}-${qIdx} .opt-btn`);
+      buttons.forEach(btn => {
+        const isSel = parseFloat(btn.dataset.value) === value;
+        btn.classList.toggle('sel', isSel);
+        btn.querySelector('.opt-radio').classList.toggle('sel', isSel);
+      });
+
+      // 진행률 및 다음 버튼 업데이트
+      const totalAnswered = Object.keys(state.answers).length;
+      const totalQuestions = QUESTIONS.reduce((s, q) => s + q.items.length, 0);
+      document.getElementById('prog-bar').style.width = `${(totalAnswered / totalQuestions) * 100}%`;
+      document.getElementById('prog-text').textContent = `${totalAnswered} / ${totalQuestions} 완료`;
+
+      updateNextBtn();
+    }
+
+    /**
+     * 현재 섹션의 모든 질문에 답변했는지 확인하고 버튼 활성화
+     */
+    function updateNextBtn() {
+      const sec = QUESTIONS[state.sectionIdx];
+      const allAnswered = sec.items.every((_, idx) =>
+        state.answers[`${sec.section}-${idx}`] !== undefined
+      );
+      document.getElementById('btn-next').disabled = !allAnswered;
+    }
+
+    /* ============================================================
+       섹션 전환 / 개인정보 화면으로 이동
+       ============================================================ */
+    function goNextSection() {
+      if (state.sectionIdx < QUESTIONS.length - 1) {
+        // 다음 섹션으로 이동
+        state.sectionIdx++;
+        renderQuestions();
+        // 페이지 스크롤 최상단으로 이동 (다음 섹션 시작 시)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // 모든 섹션 완료 → 개인정보 입력 화면으로
+        goScreen('sw-info');
+      }
+    }
+
+    /* ============================================================
+       채점 알고리즘
+       ============================================================ */
+    /**
+     * 각 지표별 합산 점수를 계산하여 16가지 피부 타입 코드 반환
+     *
+     * 지표1 (섹션A, 4문항, 1~4점+2.5): 합산 ≤10 → D(건성), >10 → O(지성)
+     * 지표2 (섹션B, 6문항, 1~4점+2.5): 합산 ≤10 → R(저항), >10 → S(민감)
+     * 지표3 (섹션C, 4문항, 1~4점+2.5): 합산 ≤10 → P(색소), >10 → N(비색소)
+     * 지표4 (섹션D, 9문항, 1~5점+2.5): 합산 ≤22 → T(탄력), >22 → W(주름)
+     *
+     * 2.5점 옵션(중립 선택지)은 부동소수로 합산에 포함됨
+     * @returns {string} 피부 타입 코드 4자리 (예: 'DRPT', 'OSNW' 등)
+     */
+    function calculateSkinType() {
+      // 섹션별 점수 합산 (2.5점 포함하여 Number 타입으로 처리)
+      const scoreA = QUESTIONS[0].items.reduce((sum, _, idx) =>
+        sum + (Number(state.answers[`A-${idx}`]) || 0), 0);
+      const scoreB = QUESTIONS[1].items.reduce((sum, _, idx) =>
+        sum + (Number(state.answers[`B-${idx}`]) || 0), 0);
+      const scoreC = QUESTIONS[2].items.reduce((sum, _, idx) =>
+        sum + (Number(state.answers[`C-${idx}`]) || 0), 0);
+      const scoreD = QUESTIONS[3].items.reduce((sum, _, idx) =>
+        sum + (Number(state.answers[`D-${idx}`]) || 0), 0);
+
+      // 지표1: ≤10=건성D, >10=지성O
+      const type1 = scoreA <= 10 ? 'D' : 'O';
+      // 지표2: ≤10=저항R, >10=민감S
+      const type2 = scoreB <= 10 ? 'R' : 'S';
+      // 지표3: ≤10=색소P, >10=비색소N
+      const type3 = scoreC <= 10 ? 'P' : 'N';
+      // 지표4: ≤22=탄력T, >22=주름W
+      const type4 = scoreD <= 22 ? 'T' : 'W';
+
+      // 개발 디버깅용 (배포 시 주석 처리 가능)
+      console.log(`[채점] A:${scoreA}→${type1} B:${scoreB}→${type2} C:${scoreC}→${type3} D:${scoreD}→${type4}`);
+
+      return `${type1}${type2}${type3}${type4}`; // 예: 'DRPT', 'OSNW'
+    }
+
+    /* ============================================================
+       개인정보 폼 처리
+       ============================================================ */
+    /** 동의 체크박스 토글 */
+    function toggleConsent() {
+      state.consentGiven = !state.consentGiven;
+      const el = document.getElementById('consent-check');
+      el.classList.toggle('on', state.consentGiven);
+      validateInfoForm();
+    }
+
+    /** 폼 유효성 검사 후 제출 버튼 활성화 */
+    function validateInfoForm() {
+      const name = document.getElementById('inp-name').value.trim();
+      const phone = document.getElementById('inp-phone').value.trim();
+      const phoneValid = /^[0-9]{9,11}$/.test(phone.replace(/-/g, ''));
+
+      const ok = name.length >= 2 && phoneValid && state.consentGiven;
+      document.getElementById('btn-submit').disabled = !ok;
+    }
+
+    /**
+     * 정보 제출 → 로딩 화면 → 결과 화면
+     */
+    function submitInfo() {
+      state.userName = document.getElementById('inp-name').value.trim();
+      state.userPhone = document.getElementById('inp-phone').value.trim();
+      state.skinType = calculateSkinType();
+
+      // 로딩 화면 표시
+      goScreen('sw-loading');
+
+      // 구글 시트 전송 (비동기, UX 블로킹 없음)
+      sendToGoogleSheets(state.userName, state.userPhone, state.skinType);
+
+      // 1.5초 후 결과 화면으로 자동 전환
+      setTimeout(() => {
+        renderResult(state.skinType);
+        goScreen('sw-result');
+      }, 1500);
+    }
+
+    /* ============================================================
+       구글 시트 연동 (Google Apps Script Webhook)
+       ============================================================ */
+    /**
+     * Google Apps Script 웹앱으로 데이터 전송
+     * Apps Script에서 doPost(e) 함수로 수신 후 시트에 저장
+     * @param {string} name - 이름
+     * @param {string} phone - 전화번호
+     * @param {string} skinType - 피부 타입 코드
+     */
+    function sendToGoogleSheets(name, phone, skinType) {
+      // GOOGLE_SCRIPT_URL이 설정되지 않은 경우 스킵
+      if (!CONFIG.GOOGLE_SCRIPT_URL) return;
+
+      const result = RESULTS[skinType];
+      const data = new URLSearchParams({
+        name: name,
+        phone: phone,
+        skinType: skinType,
+        skinTypeName: result ? result.koreanName : skinType,
+        timestamp: new Date().toLocaleString('ko-KR'),
+      });
+
+      // no-cors 모드: 응답은 받을 수 없지만 요청은 전송됨
+      fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: data.toString(),
+      }).catch(err => {
+        // 에러 발생 시 사용자에게 영향 없이 콘솔에만 기록
+        console.warn('[Google Sheets] 전송 실패:', err);
+      });
+    }
+
+    /* ============================================================
+       결과 화면 렌더링
+       ============================================================ */
+    /**
+     * 계산된 피부 타입 코드에 맞는 결과를 화면에 표시
+     * @param {string} typeCode - 피부 타입 코드 (예: 'DRPT', 'OSNW')
+     */
+    function renderResult(typeCode) {
+      const r = RESULTS[typeCode] || RESULTS['DRNT']; // fallback: 매칭 실패 시 기본값
+
+      document.getElementById('r-name-en').textContent = r.name;
+      document.getElementById('r-name-ko').textContent = r.koreanName;
+      document.getElementById('r-img').textContent = r.emoji;
+
+      // 태그 렌더링
+      const tagsEl = document.getElementById('r-tags');
+      tagsEl.innerHTML = r.tags.map(t => `<span class="rtag">${t}</span>`).join('');
+
+      // 텍스트 정보
+      document.getElementById('r-summary').textContent = r.summary;
+      document.getElementById('r-desc').textContent = r.description;
+
+      // 주요 고민 리스트
+      const concernsEl = document.getElementById('r-concerns');
+      concernsEl.innerHTML = r.concerns
+        .map(c => `<li><div class="rc-dot"></div><span>${c}</span></li>`)
+        .join('');
+
+      // 케어 추천 리스트
+      const recsEl = document.getElementById('r-recs');
+      recsEl.innerHTML = r.recommendations
+        .map(rec => `<li><div class="rc-dot" style="background:var(--p500)"></div><span>${rec}</span></li>`)
+        .join('');
+    }
+
+    /* ============================================================
+       카카오 채널 연동
+       ============================================================ */
+    /**
+     * 카카오 SDK를 동적으로 로드하고 초기화
+     * KAKAO_JS_KEY가 설정된 경우에만 실행
+     * @returns {Promise<void>}
+     */
+    function loadKakaoSDK() {
+      return new Promise(resolve => {
+        if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+          resolve(); return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js';
+        script.crossOrigin = 'anonymous';
+        script.onload = () => {
+          try { Kakao.init(CONFIG.KAKAO_JS_KEY); } catch(e) {}
+          resolve();
+        };
+        script.onerror = () => resolve(); // 실패해도 진행
+        document.head.appendChild(script);
+      });
+    }
+
+    /**
+     * CTA 버튼 클릭 시 카카오 채널 상담 오픈
+     * - KAKAO_JS_KEY 설정 시: 카카오 SDK를 통한 채널 채팅 오픈
+     * - 미설정 시: 알림 메시지 표시
+     */
+    async function openKakaoChannel() {
+      const result = RESULTS[state.skinType];
+      const typeName = result ? result.koreanName : '결과 확인';
+
+      if (CONFIG.KAKAO_JS_KEY && CONFIG.KAKAO_CHANNEL_ID) {
+        // 카카오 SDK 로드 및 채널 채팅 오픈
+        await loadKakaoSDK();
+        if (typeof Kakao !== 'undefined' && Kakao.Channel) {
+          Kakao.Channel.chat({
+            channelPublicId: CONFIG.KAKAO_CHANNEL_ID,
+          });
+        } else {
+          // SDK 실패 시 채널 직접 링크로 fallback
+          window.open(`https://pf.kakao.com/${CONFIG.KAKAO_CHANNEL_ID}`, '_blank');
+        }
+      } else {
+        // 설정 안된 경우: 개발자 안내 (실제 서비스에서는 설정 필수)
+        showToast('카카오 채널 설정이 필요합니다 (CONFIG 설정)');
+      }
+    }
+
+    /* ============================================================
+       결과 공유 기능
+       ============================================================ */
+    /**
+     * Web Share API 또는 클립보드 복사로 결과 공유
+     */
+    function shareResult() {
+      const result = RESULTS[state.skinType];
+      const typeName = result ? result.koreanName : '결과 확인';
+      const shareText = `나의 피부 MBTI는 '${typeName}'!\n서원장의 피부 MBTI 진단으로 나만의 피부 타입을 알아보세요 🌸`;
+      const shareUrl = window.location.href;
+
+      if (navigator.share) {
+        // Web Share API 지원 (모바일)
+        navigator.share({
+          title: `피부 MBTI 결과: ${typeName}`,
+          text: shareText,
+          url: shareUrl,
+        }).catch(() => {}); // 공유 취소는 에러 아님
+      } else {
+        // 미지원 시 클립보드 복사
+        const fullText = `${shareText}\n${shareUrl}`;
+        navigator.clipboard.writeText(fullText)
+          .then(() => showToast('결과가 클립보드에 복사되었습니다!'))
+          .catch(() => showToast('공유하기가 지원되지 않는 환경입니다'));
+      }
+    }
+
+    /* ============================================================
+       다시 시작
+       ============================================================ */
+    /** 모든 상태 초기화 후 시작 화면으로 */
+    function restartQuiz() {
+      state.sectionIdx = 0;
+      state.answers = {};
+      state.userName = '';
+      state.userPhone = '';
+      state.skinType = '';
+      state.consentGiven = false;
+
+      // 폼 초기화
+      document.getElementById('inp-name').value = '';
+      document.getElementById('inp-phone').value = '';
+      document.getElementById('consent-check').classList.remove('on');
+      document.getElementById('btn-submit').disabled = true;
+
+      goScreen('sw-start');
+    }
+
+    /* ============================================================
+       토스트 알림
+       ============================================================ */
+    let toastTimer = null;
+    /**
+     * 하단 토스트 메시지 표시
+     * @param {string} msg - 표시할 메시지
+     * @param {number} duration - 표시 시간(ms), 기본 2500ms
+     */
+    function showToast(msg, duration = 2500) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), duration);
+    }
+
+    /* ============================================================
+       초기화 — 시작 화면 페이드인
+       ============================================================ */
+    window.addEventListener('DOMContentLoaded', () => {
+      // 시작 화면 페이드인
+      const startSw = document.getElementById('sw-start');
+      startSw.classList.add('active');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => startSw.classList.add('visible'));
+      });
+    });
+  </script>
+</body>
+</html>
