@@ -645,6 +645,20 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+    /* 상단 토스트 (카카오 채널 이동 안내용) */
+    .toast.top {
+      bottom: auto;
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      transform: translateX(-50%) translateY(-16px);
+      white-space: normal;
+      text-align: center;
+      max-width: calc(min(440px, 100%) - 40px);
+      line-height: 1.6;
+      padding: 14px 20px;
+    }
+    .toast.top.show {
+      transform: translateX(-50%) translateY(0);
+    }
 
     /* ============================================================
        반응형: 480px 초과 시 배경 처리
@@ -1583,20 +1597,35 @@
     const KAKAO_CHANNEL_APP_URL = 'kakaoplus://friend?uuid=_baGJn';
 
     /**
-     * CTA 버튼 클릭 시 카카오 채널로 연결
-     * - 모바일: 앱 딥링크 우선 시도 → 1.5초 후 브라우저 fallback
-     * - PC: 브라우저에서 채널 페이지 열기
+     * CTA 버튼 클릭 시:
+     * 1. 피부 타입 결과를 클립보드에 복사
+     * 2. 상단 토스트로 붙여넣기 안내 (3초)
+     * 3. 1초 후 카카오 채널로 이동 (모바일: 앱 딥링크 → 1.5초 후 브라우저 fallback)
      */
     function openKakaoChannel() {
-      const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-      if (isMobile) {
-        window.location.href = KAKAO_CHANNEL_APP_URL;
-        setTimeout(function() {
+      const r = RESULTS[state.skinType];
+      const typeCode = state.skinType || '';
+      const typeTags = r ? r.tags.join('·') : typeCode;
+      const clipMsg = `안녕하세요! 피부 MBTI 진단 결과가 나왔어요 😊\n저의 피부 타입은 ${typeCode} (${typeTags}) 입니다.\n맞춤 홈코칭 상담 부탁드려요!`;
+
+      // 클립보드 복사 (실패해도 채널 이동은 진행)
+      navigator.clipboard.writeText(clipMsg).catch(() => {});
+
+      // 상단 토스트 3초 표시
+      showToast('결과가 복사되었습니다. 채팅창에 붙여넣기(Ctrl+V 또는 길게 누르기) 해주세요!', 3000, 'top');
+
+      // 1초 후 카카오 채널 이동
+      setTimeout(function() {
+        const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+        if (isMobile) {
+          window.location.href = KAKAO_CHANNEL_APP_URL;
+          setTimeout(function() {
+            window.open(KAKAO_CHANNEL_URL, '_blank');
+          }, 1500);
+        } else {
           window.open(KAKAO_CHANNEL_URL, '_blank');
-        }, 1500);
-      } else {
-        window.open(KAKAO_CHANNEL_URL, '_blank');
-      }
+        }
+      }, 1000);
     }
 
     /* ============================================================
@@ -1644,16 +1673,22 @@
        ============================================================ */
     let toastTimer = null;
     /**
-     * 하단 토스트 메시지 표시
+     * 토스트 메시지 표시
      * @param {string} msg - 표시할 메시지
      * @param {number} duration - 표시 시간(ms), 기본 2500ms
+     * @param {string} position - 'bottom'(기본) 또는 'top'
      */
-    function showToast(msg, duration = 2500) {
+    function showToast(msg, duration = 2500, position = 'bottom') {
       const el = document.getElementById('toast');
       el.textContent = msg;
+      el.classList.toggle('top', position === 'top');
       el.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove('show'), duration);
+      toastTimer = setTimeout(() => {
+        el.classList.remove('show');
+        // 애니메이션 완료 후 top 클래스 제거 (다음 토스트를 위해)
+        setTimeout(() => el.classList.remove('top'), 350);
+      }, duration);
     }
 
     /* ============================================================
