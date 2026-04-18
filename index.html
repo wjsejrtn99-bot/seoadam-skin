@@ -356,110 +356,6 @@
     }
 
     /* ============================================================
-       개인정보 입력 화면
-       ============================================================ */
-    #sw-info { min-height: 100vh; background: var(--bg); }
-    .info-header {
-      background: linear-gradient(160deg, var(--p50), var(--white));
-      padding: 32px 24px 24px;
-      text-align: center;
-      border-bottom: 1px solid #ffe0ed;
-    }
-    .info-header-emoji { font-size: 40px; margin-bottom: 12px; }
-    .info-header-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--txt);
-      margin-bottom: 8px;
-    }
-    .info-header-desc {
-      font-size: 13px;
-      color: var(--txt3);
-      line-height: 1.7;
-    }
-    .info-body { padding: 24px 20px; }
-    .form-group { margin-bottom: 16px; }
-    .form-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--txt);
-      margin-bottom: 7px;
-    }
-    .form-label span {
-      color: var(--p500);
-      margin-left: 2px;
-    }
-    .form-input {
-      display: block;
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid var(--p200);
-      border-radius: var(--rs);
-      font-size: 16px; /* iOS 줌 방지: 16px 이상 필수 */
-      font-family: inherit;
-      color: var(--txt);
-      background: var(--white);
-      outline: none;
-      transition: border-color .2s;
-    }
-    .form-input:focus { border-color: var(--p400); }
-    .form-input::placeholder { color: var(--txt3); font-size: 14px; }
-
-    /* 개인정보 동의 박스 */
-    .consent-box {
-      background: var(--p50);
-      border: 1.5px solid var(--p200);
-      border-radius: var(--rs);
-      padding: 16px;
-      margin: 20px 0;
-    }
-    .consent-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      cursor: pointer;
-    }
-    .consent-check {
-      width: 22px;
-      height: 22px;
-      min-width: 22px;
-      border: 2px solid var(--p300);
-      border-radius: 6px;
-      background: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all .2s;
-      margin-top: 1px;
-    }
-    .consent-check.on {
-      background: var(--p500);
-      border-color: var(--p500);
-    }
-    .consent-check.on::after {
-      content: '✓';
-      color: var(--white);
-      font-size: 13px;
-      font-weight: 900;
-    }
-    .consent-txt {
-      font-size: 13px;
-      color: var(--txt);
-      line-height: 1.6;
-      font-weight: 500;
-    }
-    .consent-detail {
-      font-size: 11px;
-      color: var(--txt3);
-      line-height: 1.6;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--p200);
-    }
-    .info-footer { padding: 0 20px calc(32px + var(--safe-b)); }
-
-    /* ============================================================
        로딩 화면
        ============================================================ */
     #sw-loading {
@@ -584,17 +480,50 @@
       padding: 4px 12px;
       border-radius: 12px;
     }
+    /* ─── 피부 타입 알파벳 크게 표시 (한글 라벨 위, 알파벳 아래) ─── */
+    .type-letters {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 24px 0 20px;
+    }
+    .type-letter-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255,255,255,.9);
+      border-radius: 16px;
+      padding: 10px 12px 8px;
+      min-width: 64px;
+      box-shadow: 0 2px 12px rgba(233,30,140,.12);
+    }
+    .type-letter-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--p600);
+      letter-spacing: .2px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
+    .type-letter-char {
+      font-size: 46px;
+      font-weight: 900;
+      color: var(--p500);
+      line-height: 1;
+      font-family: 'Playfair Display', serif;
+    }
+
     /* 이미지 플레이스홀더 (실제 이미지로 교체 가능) */
     .result-img {
-      width: 150px;
-      height: 150px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--p100), #ffd6e7);
-      margin: 0 auto;
+      margin: 0 auto 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 56px;
+      font-size: 52px;
       box-shadow: 0 8px 32px rgba(255,107,157,.22);
       /* 실제 이미지로 교체 시: background-image: url('your-image.jpg'); background-size: cover; */
     }
@@ -736,7 +665,7 @@
       <div class="start-inner">
         <span class="brand-chip">SKIN MBTI TEST</span>
         <!-- 브랜드 로고 / 일러스트 플레이스홀더 -->
-        <div class="start-deco">🌸</div>
+        <div class="start-deco" style="font-size:48px;color:var(--p400);font-family:'Playfair Display',serif;font-style:italic;">Skin</div>
         <h1 class="start-title">Skin MBTI</h1>
         <p class="start-subtitle">나의 피부 유형을 알아보세요</p>
         <p class="start-desc">
@@ -790,60 +719,7 @@
   </div>
 
   <!-- ============================================================
-       화면 3: 개인정보 입력 화면
-       ============================================================ -->
-  <div id="sw-info" class="sw">
-    <div style="max-width:480px;margin:0 auto;">
-      <div class="info-header">
-        <div class="info-header-emoji">✨</div>
-        <h2 class="info-header-title">거의 다 왔어요!</h2>
-        <p class="info-header-desc">
-          분석 결과와 맞춤 홈코칭 정보를<br>
-          알려드리기 위해 아래 정보를 입력해주세요
-        </p>
-      </div>
-      <div class="info-body">
-        <div class="form-group">
-          <label class="form-label" for="inp-name">이름 <span>*</span></label>
-          <input
-            class="form-input" id="inp-name" type="text"
-            placeholder="이름을 입력하세요" autocomplete="name"
-            oninput="validateInfoForm()"
-          >
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="inp-phone">전화번호 <span>*</span></label>
-          <input
-            class="form-input" id="inp-phone" type="tel"
-            placeholder="'-' 없이 숫자만 입력" autocomplete="tel"
-            oninput="validateInfoForm()"
-          >
-        </div>
-
-        <!-- 개인정보 동의 -->
-        <div class="consent-box">
-          <div class="consent-row" onclick="toggleConsent()">
-            <div class="consent-check" id="consent-check"></div>
-            <div>
-              <p class="consent-txt">[필수] 개인정보 수집 및 이용 동의</p>
-              <div class="consent-detail">
-                수집 항목: 이름, 전화번호, 피부 진단 결과<br>
-                수집 목적: 피부 홈코칭 맞춤 상담 제공<br>
-                보유 기간: 상담 완료 후 1년<br>
-                동의를 거부하실 수 있으나, 서비스 이용이 제한될 수 있습니다.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="info-footer">
-        <button class="btn-main" id="btn-submit" disabled onclick="submitInfo()">결과 확인하기 →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       화면 4: 로딩 화면 (1.5초 자동 전환)
+       화면 3: 로딩 화면 (2초 자동 전환)
        ============================================================ -->
   <div id="sw-loading" class="sw">
     <div style="max-width:480px;margin:0 auto;">
@@ -853,7 +729,7 @@
           <div class="spin-ring"></div>
           <div class="spin-ring"></div>
           <div class="spin-ring"></div>
-          <div class="spin-center">🔬</div>
+          <div class="spin-center"></div>
         </div>
         <h2 class="loading-title">서원장님이 피부 타입을<br>분석 중입니다...</h2>
         <p class="loading-sub">23가지 응답을 바탕으로<br>최적의 피부 유형을 찾고 있어요</p>
@@ -874,33 +750,20 @@
       <!-- 히어로 영역 -->
       <div class="result-hero">
         <div class="result-badge">MY SKIN TYPE</div>
+        <!-- 이미지 플레이스홀더: 실제 서비스에서 피부 타입별 이미지로 교체 -->
+        <div class="result-img" id="r-img"></div>
+        <!-- 피부 타입 알파벳 크게 표시 -->
+        <div class="type-letters" id="r-type-letters"></div>
         <div class="result-type-en" id="r-name-en">—</div>
         <div class="result-type-ko" id="r-name-ko">—</div>
         <div class="result-tags" id="r-tags"></div>
-        <!-- 이미지 플레이스홀더: 실제 서비스에서 피부 타입별 이미지로 교체 -->
-        <div class="result-img" id="r-img">🌸</div>
       </div>
 
       <!-- 결과 상세 -->
       <div class="result-body">
-        <!-- 한 줄 요약 -->
-        <div class="result-card">
-          <div class="rc-title">📌 한 줄 요약</div>
-          <p class="rc-text" id="r-summary">—</p>
-        </div>
-        <!-- 상세 설명 -->
-        <div class="result-card">
-          <div class="rc-title">💆 피부 특성</div>
-          <p class="rc-text" id="r-desc">—</p>
-        </div>
-        <!-- 주요 고민 -->
-        <div class="result-card">
-          <div class="rc-title">⚠️ 주요 피부 고민</div>
-          <ul class="rc-list" id="r-concerns"></ul>
-        </div>
         <!-- 케어 추천 -->
         <div class="result-card">
-          <div class="rc-title">✅ 케어 추천</div>
+          <div class="rc-title">케어 추천</div>
           <ul class="rc-list" id="r-recs"></ul>
         </div>
       </div>
@@ -908,7 +771,7 @@
       <!-- CTA 섹션 -->
       <div class="cta-section">
         <div class="cta-card">
-          <p class="cta-card-title">🎁 나에게 맞는 1:1 피부 홈코칭</p>
+          <p class="cta-card-title">나에게 맞는 1:1 피부 홈코칭</p>
           <p class="cta-card-desc">
             <span class="cta-highlight">서원장</span>이 직접 분석한<br>
             나의 피부 타입에 꼭 맞는 홈케어 루틴을<br>
@@ -929,7 +792,7 @@
         </p>
 
         <!-- 공유 버튼 -->
-        <button class="btn-outline" onclick="shareResult()">🔗 결과 공유하기</button>
+        <button class="btn-outline" onclick="shareResult()">결과 공유하기</button>
 
         <!-- 재시작 버튼 -->
         <button class="btn-outline" style="color:var(--txt3);border-color:#eee;margin-top:8px;" onclick="restartQuiz()">처음부터 다시하기</button>
@@ -1412,12 +1275,9 @@
        앱 상태 (App State)
        ============================================================ */
     const state = {
-      sectionIdx: 0,          // 현재 섹션 인덱스 (0=A, 1=B, 2=C, 3=D)
-      answers: {},            // 답변 저장: { 'A-0': 3, 'A-1': 2, ... }
-      userName: '',           // 사용자 이름
-      userPhone: '',          // 사용자 전화번호
-      skinType: '',           // 계산된 피부 타입 코드 (예: 'DRPT', 'OSNW')
-      consentGiven: false,    // 개인정보 동의 여부
+      sectionIdx: 0,   // 현재 섹션 인덱스 (0=A, 1=B, 2=C, 3=D)
+      answers: {},     // 답변 저장: { 'A-0': 3, 'A-1': 2, ... }
+      skinType: '',    // 계산된 피부 타입 코드 (예: 'DRPT', 'OSNW')
     };
 
     /* ============================================================
@@ -1577,7 +1437,7 @@
     }
 
     /* ============================================================
-       섹션 전환 / 개인정보 화면으로 이동
+       섹션 전환 / 로딩 화면으로 이동
        ============================================================ */
     function goNextSection() {
       if (state.sectionIdx < QUESTIONS.length - 1) {
@@ -1587,8 +1447,15 @@
         // 페이지 스크롤 최상단으로 이동 (다음 섹션 시작 시)
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        // 모든 섹션 완료 → 개인정보 입력 화면으로
-        goScreen('sw-info');
+        // 모든 섹션 완료 → 로딩 화면으로 바로 전환
+        state.skinType = calculateSkinType();
+        goScreen('sw-loading');
+
+        // 2초 후 결과 화면으로 자동 전환
+        setTimeout(() => {
+          renderResult(state.skinType);
+          goScreen('sw-result');
+        }, 2000);
       }
     }
 
@@ -1630,48 +1497,6 @@
       console.log(`[채점] A:${scoreA}→${type1} B:${scoreB}→${type2} C:${scoreC}→${type3} D:${scoreD}→${type4}`);
 
       return `${type1}${type2}${type3}${type4}`; // 예: 'DRPT', 'OSNW'
-    }
-
-    /* ============================================================
-       개인정보 폼 처리
-       ============================================================ */
-    /** 동의 체크박스 토글 */
-    function toggleConsent() {
-      state.consentGiven = !state.consentGiven;
-      const el = document.getElementById('consent-check');
-      el.classList.toggle('on', state.consentGiven);
-      validateInfoForm();
-    }
-
-    /** 폼 유효성 검사 후 제출 버튼 활성화 */
-    function validateInfoForm() {
-      const name = document.getElementById('inp-name').value.trim();
-      const phone = document.getElementById('inp-phone').value.trim();
-      const phoneValid = /^[0-9]{9,11}$/.test(phone.replace(/-/g, ''));
-
-      const ok = name.length >= 2 && phoneValid && state.consentGiven;
-      document.getElementById('btn-submit').disabled = !ok;
-    }
-
-    /**
-     * 정보 제출 → 로딩 화면 → 결과 화면
-     */
-    function submitInfo() {
-      state.userName = document.getElementById('inp-name').value.trim();
-      state.userPhone = document.getElementById('inp-phone').value.trim();
-      state.skinType = calculateSkinType();
-
-      // 로딩 화면 표시
-      goScreen('sw-loading');
-
-      // 구글 시트 전송 (비동기, UX 블로킹 없음)
-      sendToGoogleSheets(state.userName, state.userPhone, state.skinType);
-
-      // 1.5초 후 결과 화면으로 자동 전환
-      setTimeout(() => {
-        renderResult(state.skinType);
-        goScreen('sw-result');
-      }, 1500);
     }
 
     /* ============================================================
@@ -1719,23 +1544,30 @@
     function renderResult(typeCode) {
       const r = RESULTS[typeCode] || RESULTS['DRNT']; // fallback: 매칭 실패 시 기본값
 
+      // 피부 타입 이모지 (타입별 대응)
+      document.getElementById('r-img').textContent = r.emoji;
+
+      // 타입 알파벳 블록 렌더링 (한글 라벨 위, 알파벳 아래)
+      const letterDefs = [
+        { char: typeCode[0], label: typeCode[0] === 'D' ? '건성' : '지성' },
+        { char: typeCode[1], label: typeCode[1] === 'R' ? '저항성' : '민감성' },
+        { char: typeCode[2], label: typeCode[2] === 'P' ? '색소형' : '비색소형' },
+        { char: typeCode[3], label: typeCode[3] === 'T' ? '탄력형' : '주름형' },
+      ];
+      document.getElementById('r-type-letters').innerHTML = letterDefs
+        .map(d => `
+          <div class="type-letter-item">
+            <span class="type-letter-label">${d.label}</span>
+            <span class="type-letter-char">${d.char}</span>
+          </div>
+        `).join('');
+
       document.getElementById('r-name-en').textContent = r.name;
       document.getElementById('r-name-ko').textContent = r.koreanName;
-      document.getElementById('r-img').textContent = r.emoji;
 
       // 태그 렌더링
       const tagsEl = document.getElementById('r-tags');
       tagsEl.innerHTML = r.tags.map(t => `<span class="rtag">${t}</span>`).join('');
-
-      // 텍스트 정보
-      document.getElementById('r-summary').textContent = r.summary;
-      document.getElementById('r-desc').textContent = r.description;
-
-      // 주요 고민 리스트
-      const concernsEl = document.getElementById('r-concerns');
-      concernsEl.innerHTML = r.concerns
-        .map(c => `<li><div class="rc-dot"></div><span>${c}</span></li>`)
-        .join('');
 
       // 케어 추천 리스트
       const recsEl = document.getElementById('r-recs');
@@ -1745,53 +1577,25 @@
     }
 
     /* ============================================================
-       카카오 채널 연동
+       카카오 채널 연동 (서아담 에스테틱)
        ============================================================ */
-    /**
-     * 카카오 SDK를 동적으로 로드하고 초기화
-     * KAKAO_JS_KEY가 설정된 경우에만 실행
-     * @returns {Promise<void>}
-     */
-    function loadKakaoSDK() {
-      return new Promise(resolve => {
-        if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
-          resolve(); return;
-        }
-        const script = document.createElement('script');
-        script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js';
-        script.crossOrigin = 'anonymous';
-        script.onload = () => {
-          try { Kakao.init(CONFIG.KAKAO_JS_KEY); } catch(e) {}
-          resolve();
-        };
-        script.onerror = () => resolve(); // 실패해도 진행
-        document.head.appendChild(script);
-      });
-    }
+    const KAKAO_CHANNEL_URL = 'https://pf.kakao.com/_baGJn';
+    const KAKAO_CHANNEL_APP_URL = 'kakaoplus://friend?uuid=_baGJn';
 
     /**
-     * CTA 버튼 클릭 시 카카오 채널 상담 오픈
-     * - KAKAO_JS_KEY 설정 시: 카카오 SDK를 통한 채널 채팅 오픈
-     * - 미설정 시: 알림 메시지 표시
+     * CTA 버튼 클릭 시 카카오 채널로 연결
+     * - 모바일: 앱 딥링크 우선 시도 → 1.5초 후 브라우저 fallback
+     * - PC: 브라우저에서 채널 페이지 열기
      */
-    async function openKakaoChannel() {
-      const result = RESULTS[state.skinType];
-      const typeName = result ? result.koreanName : '결과 확인';
-
-      if (CONFIG.KAKAO_JS_KEY && CONFIG.KAKAO_CHANNEL_ID) {
-        // 카카오 SDK 로드 및 채널 채팅 오픈
-        await loadKakaoSDK();
-        if (typeof Kakao !== 'undefined' && Kakao.Channel) {
-          Kakao.Channel.chat({
-            channelPublicId: CONFIG.KAKAO_CHANNEL_ID,
-          });
-        } else {
-          // SDK 실패 시 채널 직접 링크로 fallback
-          window.open(`https://pf.kakao.com/${CONFIG.KAKAO_CHANNEL_ID}`, '_blank');
-        }
+    function openKakaoChannel() {
+      const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = KAKAO_CHANNEL_APP_URL;
+        setTimeout(function() {
+          window.open(KAKAO_CHANNEL_URL, '_blank');
+        }, 1500);
       } else {
-        // 설정 안된 경우: 개발자 안내 (실제 서비스에서는 설정 필수)
-        showToast('카카오 채널 설정이 필요합니다 (CONFIG 설정)');
+        window.open(KAKAO_CHANNEL_URL, '_blank');
       }
     }
 
@@ -1830,16 +1634,7 @@
     function restartQuiz() {
       state.sectionIdx = 0;
       state.answers = {};
-      state.userName = '';
-      state.userPhone = '';
       state.skinType = '';
-      state.consentGiven = false;
-
-      // 폼 초기화
-      document.getElementById('inp-name').value = '';
-      document.getElementById('inp-phone').value = '';
-      document.getElementById('consent-check').classList.remove('on');
-      document.getElementById('btn-submit').disabled = true;
 
       goScreen('sw-start');
     }
