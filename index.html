@@ -774,13 +774,6 @@
       </div>
 
       <!-- 결과 상세 -->
-      <div class="result-body">
-        <!-- 케어 추천 -->
-        <div class="result-card">
-          <div class="rc-title">케어 추천</div>
-          <ul class="rc-list" id="r-recs"></ul>
-        </div>
-      </div>
 
       <!-- CTA 섹션 -->
       <div class="cta-section">
@@ -1419,6 +1412,9 @@
      */
     function selectAnswer(section, qIdx, value) {
       const key = `${section}-${qIdx}`;
+      // 처음 선택인지 미리 확인 (수정 시 자동 스크롤 방지)
+      const isNewAnswer = state.answers[key] === undefined;
+
       state.answers[key] = value;
 
       // 해당 질문의 모든 옵션 버튼 UI 업데이트
@@ -1437,6 +1433,23 @@
       document.getElementById('prog-text').textContent = `${totalAnswered} / ${totalQuestions} 완료`;
 
       updateNextBtn();
+
+      // 자동 스크롤: 처음 선택할 때만, 현재 섹션의 마지막 질문이 아닐 때만
+      if (isNewAnswer) {
+        const sec = QUESTIONS[state.sectionIdx];
+        const isLastInSection = qIdx === sec.items.length - 1;
+        if (!isLastInSection) {
+          setTimeout(() => {
+            const cards = document.querySelectorAll('#q-body .q-card');
+            const nextCard = cards[qIdx + 1];
+            if (nextCard) {
+              const headerHeight = document.querySelector('.q-header').offsetHeight;
+              const cardTop = nextCard.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo({ top: cardTop - headerHeight - 12, behavior: 'smooth' });
+            }
+          }, 300);
+        }
+      }
     }
 
     /**
@@ -1583,11 +1596,6 @@
       const tagsEl = document.getElementById('r-tags');
       tagsEl.innerHTML = r.tags.map(t => `<span class="rtag">${t}</span>`).join('');
 
-      // 케어 추천 리스트
-      const recsEl = document.getElementById('r-recs');
-      recsEl.innerHTML = r.recommendations
-        .map(rec => `<li><div class="rc-dot" style="background:var(--p500)"></div><span>${rec}</span></li>`)
-        .join('');
     }
 
     /* ============================================================
