@@ -555,10 +555,20 @@
     }
     .type-code-box.copied .type-copied-overlay { display: flex; }
     .type-copy-hint {
-      font-size: 11px;
-      color: var(--txt3);
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      background: #FF6B9D;
+      border-radius: 20px;
+      padding: 8px 20px;
       margin-bottom: 20px;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s;
     }
+    .type-copy-hint:active { background: #e05588; }
     /* 카카오 채팅 붙여넣기 힌트 */
     .cta-paste-hint {
       text-align: center;
@@ -657,6 +667,28 @@
       line-height: 1.7;
     }
     .cta-note strong { color: var(--p500); }
+    /* CTA 버튼 위 안내 박스 */
+    .cta-guide-box {
+      background: #fffbea;
+      border: 1.5px solid #ffe066;
+      border-radius: var(--rs);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      text-align: left;
+      line-height: 1.75;
+      font-size: 13px;
+      color: var(--txt);
+    }
+    .cta-guide-box strong { color: var(--p600); font-weight: 700; }
+    .cta-guide-code {
+      display: inline-block;
+      background: var(--p100);
+      color: var(--p600);
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
     .btn-kakao {
       display: flex;
       align-items: center;
@@ -672,10 +704,16 @@
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      transition: all .25s;
+      touch-action: manipulation;
+      transition: background .3s, color .3s, box-shadow .3s;
       box-shadow: 0 4px 16px rgba(254,229,0,.45);
     }
     .btn-kakao:active { transform: scale(.97); }
+    .btn-kakao.done {
+      background: #22c55e;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(34,197,94,.35);
+    }
 
     /* ============================================================
        토스트 알림
@@ -826,7 +864,7 @@
           <div class="type-copied-overlay">복사됨!</div>
           <div id="r-type-letters" class="type-code-cols" style="display:flex;gap:0;"></div>
         </div>
-        <p class="type-copy-hint">탭해서 복사하세요</p>
+        <p class="type-copy-hint" onclick="copyTypeCode()">📋 탭해서 복사하세요</p>
         <div class="result-type-en" id="r-name-en">—</div>
         <div class="result-type-ko" id="r-name-ko">—</div>
         <div class="result-tags" id="r-tags"></div>
@@ -845,14 +883,22 @@
           </p>
         </div>
 
+        <!-- 버튼 위 안내 박스 (동적으로 결과값 삽입) -->
+        <div class="cta-guide-box" id="cta-guide-box">
+          💡 <strong>상담 신청 전 확인하세요!</strong><br>
+          버튼을 누르면 나의 피부 타입 <span id="cta-guide-code" class="cta-guide-code">—</span>이<br>
+          자동으로 복사됩니다.<br>
+          카카오톡 채팅창 열리면<br>
+          길게 누르기 → 붙여넣기 해주세요 😊
+        </div>
+
         <!-- 카카오 채널 상담 버튼 -->
         <button class="btn-kakao" id="btn-cta" onclick="openKakaoChannel()">
           <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
             <path d="M18 3C9.716 3 3 8.372 3 15c0 4.26 2.66 8.003 6.68 10.26L8.24 31.5l6.584-4.38c1.03.18 2.09.28 3.176.28 8.284 0 15-5.372 15-12S26.284 3 18 3z" fill="#191919"/>
           </svg>
-          나에게 맞는 피부 홈코칭 신청하기
+          <span id="btn-cta-text">나에게 맞는 피부 홈코칭 신청하기</span>
         </button>
-        <p class="cta-paste-hint">카카오톡 채팅창 → 길게 누르기 → 붙여넣기</p>
 
         <!-- 공유 버튼 -->
         <button class="btn-outline" onclick="shareResult()">결과 공유하기</button>
@@ -1647,6 +1693,10 @@
       document.getElementById('r-name-en').textContent = r.name;
       document.getElementById('r-name-ko').textContent = r.koreanName;
       document.getElementById('r-tags').innerHTML = r.tags.map(t => `<span class="rtag">${t}</span>`).join('');
+
+      // 안내 박스에 실제 타입 코드 삽입
+      const guideCode = document.getElementById('cta-guide-code');
+      if (guideCode) guideCode.textContent = typeCode;
     }
 
     /* ============================================================
@@ -1654,9 +1704,34 @@
        ============================================================ */
     const KAKAO_CHANNEL_URL = 'https://pf.kakao.com/_baGJn';
 
-    /** CTA 버튼 클릭 → 카카오 채널로 단순 이동 (iOS/Android 공통) */
+    /**
+     * CTA 버튼 클릭:
+     * 1. 클립보드에 결과 메시지 즉시 복사
+     * 2. 버튼 → 초록색 + 완료 텍스트로 변경
+     * 3. 2초 후 카카오 채널 이동
+     */
     function openKakaoChannel() {
-      window.location.href = KAKAO_CHANNEL_URL;
+      const typeCode = state.skinType || '';
+      const copyText = `안녕하세요! 저의 피부 타입은 ${typeCode}입니다. 맞춤 상담 부탁드려요!`;
+
+      // 클립보드 즉시 복사 (터치 핸들러 내)
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(copyText).catch(() => fallbackCopy(copyText));
+      } else {
+        fallbackCopy(copyText);
+      }
+
+      // 버튼 상태 → 완료
+      const btn = document.getElementById('btn-cta');
+      const btnText = document.getElementById('btn-cta-text');
+      btn.classList.add('done');
+      btn.disabled = true;
+      btnText.textContent = `✓ ${typeCode} 복사 완료! 카카오에서 붙여넣기 하세요`;
+
+      // 2초 후 카카오 채널 이동
+      setTimeout(() => {
+        window.location.href = KAKAO_CHANNEL_URL;
+      }, 2000);
     }
 
     /* ============================================================
@@ -1734,6 +1809,12 @@
       state.sectionIdx = 0;
       state.answers = {};
       state.skinType = '';
+
+      // CTA 버튼 상태 원복
+      const btn = document.getElementById('btn-cta');
+      const btnText = document.getElementById('btn-cta-text');
+      if (btn) { btn.classList.remove('done'); btn.disabled = false; }
+      if (btnText) btnText.textContent = '나에게 맞는 피부 홈코칭 신청하기';
 
       goScreen('sw-start');
     }
